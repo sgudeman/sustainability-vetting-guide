@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sustainability Vetting Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark:       #1B3036;   /* deep teal-black: headers, nav, dark panels */
+    --forest:     #3D7A60;   /* forest green: primary accent */
+    --forest-dk:  #2C5A46;   /* dark forest: hover / headings */
+    --forest-lt:  #E6F2EC;   /* light forest tint: context tags, green signs */
+    --stone:      #F3F1ED;   /* warm stone: page background */
+    --paper:      #FFFFFF;   /* card surfaces */
+    --ink:        #1A1A18;   /* near-black body text */
+    --mid:        #6B7570;   /* cool mid gray: secondary text, notes */
+    --border:     #D4D0C8;   /* warm light gray borders */
+    --border-m:   #B8B4AC;   /* medium borders: hover, dividers */
+    --slate:      #2E4F6A;   /* slate navy: DEI section */
+    --slate-lt:   #E6ECF2;   /* light slate tint */
+    /* Signal colors — functional, utilitarian */
+    --ko:         #B03C32;   /* knockout red */
+    --ko-lt:      #FAEBE9;   /* knockout bg */
+    --imp:        #8A6828;   /* important amber */
+    --imp-lt:     #F5EDDA;   /* important bg */
+    --ctx:        #3D7A60;   /* context = forest */
+    --ctx-lt:     #E6F2EC;   /* context bg */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--stone);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 68px;
+  }
+
+  @page {
+    margin: 56px 42px 48px 42px;
+    @bottom-left {
+      content: "© 2026 Sarah Gudeman, PE, <a href="https://www.usgbc.org/credentials/leed-fellow" target="_blank" rel="noopener">LEED Fellow</a>  ·  linkedin.com/in/sarahgudeman. All rights reserved.";
+      font-family: 'Manrope', Arial, sans-serif;
+      font-size: 7px;
+      color: #7A7870;
+      vertical-align: top;
+      padding-top: 6px;
+      border-top: 1px solid #D4D0C8;
+    }
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: 'Manrope', Arial, sans-serif;
+      font-size: 7.5px;
+      color: #9A9690;
+      vertical-align: top;
+      padding-top: 6px;
+      border-top: 1px solid #D4D0C8;
+    }
+  }
+
+  @media print {
+    body { font-size: 10px; background: white; padding-bottom: 0; }
+    .no-print { display: none !important; }
+    .print-only { display: block !important; }
+    .guide-header, .scoreboard, .page-footer { display: none !important; }
+
+    /* ── COLOR PRESERVATION ── */
+    .masthead,
+    .scoring-ref-dark,
+    .scoring-box,
+    .signal-ko, .signal-imp, .signal-ctx,
+    .q-signal,
+    .cat-num, .cat-num.equity,
+    .tier-badge,
+    .ko-label, .kc-num { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    /* ── LAYOUT ADJUSTMENTS ── */
+    .masthead { padding: 22px 40px 18px; }
+    .masthead h1 { font-size: 20px; }
+    .masthead-sub { font-size: 11px; margin-bottom: 16px; }
+    .masthead::before, .masthead::after { display: none; }
+    .body-wrap { padding: 14px 0 40px; }
+    .intro-block { margin-bottom: 28px; padding: 18px 22px; }
+    .category { margin-bottom: 28px; }
+    .flags-grid { grid-template-columns: 1fr 1fr; }
+    .scoring-ref-body { grid-template-columns: 1fr 1fr; }
+
+    /* ── PAGE BREAK CONTROLS ── */
+    /* Never break inside a question card */
+    .q-item {
+      border: 1px solid #D4D0C8 !important;
+      border-left: 3px solid #D4D0C8 !important;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .q-item.scored-weak    { border-left-color: #B03C32 !important; }
+    .q-item.scored-partial { border-left-color: #8A6828 !important; }
+    .q-item.scored-strong  { border-left-color: #3D7A60 !important; }
+
+    /* Keep category header glued to its first question */
+    .category-header {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    .question-list li:first-child {
+      page-break-before: avoid;
+      break-before: avoid;
+    }
+
+    /* Section-level: allow breaks between questions, not within */
+    .question-list { page-break-inside: auto; break-inside: auto; }
+
+    /* Keep scoring tier rows together */
+    .tier-row { page-break-inside: avoid; break-inside: avoid; }
+
+    /* Keep KO criteria blocks together */
+    .ko-item { page-break-inside: avoid; break-inside: avoid; }
+    .ko-criteria { page-break-inside: avoid; break-inside: avoid; }
+    .ko-crit { page-break-inside: avoid; break-inside: avoid; }
+
+    /* Keep ref-blocks together */
+    .ref-block { page-break-inside: avoid; break-inside: avoid; }
+    .scale-row { page-break-inside: avoid; break-inside: avoid; }
+
+    /* Keep scoring/flags panels together */
+    .scoring-box { page-break-inside: avoid; break-inside: avoid; }
+    .score-grid  { page-break-inside: avoid; break-inside: avoid; }
+    .redflags    { page-break-inside: avoid; break-inside: avoid; }
+    .greensigns  { page-break-inside: avoid; break-inside: avoid; }
+    .flags-grid  { page-break-inside: avoid; break-inside: avoid; }
+
+    /* Scoring reference starts on a new page */
+    .scoring-ref { page-break-before: always; break-before: always; }
+
+    /* ── PRINT PAGE HEADER ── */
+    .print-page-header {
+      display: flex !important;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 40px;
+      background: white;
+      border-bottom: 1.5px solid #1B3036;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 42px;
+      z-index: 1000;
+    }
+    .pph-left {
+      font-family: 'Manrope', sans-serif;
+      font-size: 8.5px;
+      font-weight: 800;
+      color: #1B3036;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .pph-right {
+      font-family: 'Manrope', sans-serif;
+      font-size: 8.5px;
+      font-weight: 500;
+      color: #9A9690;
+      letter-spacing: 0.06em;
+    }
+
+  }
+
+  /* ── GUIDE HEADER (no branding) ── */
+  .guide-header {
+    background: var(--dark);
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+  .guide-header-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .guide-header-right { display: flex; align-items: center; gap: 16px; }
+  .guide-version { font-size: 10.5px; color: rgba(255,255,255,0.28); letter-spacing: 0.08em; }
+  .guide-print-btn {
+    background: var(--forest);
+    border: none; color: white; padding: 6px 16px;
+    border-radius: 2px; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer; font-family: 'Manrope', sans-serif;
+    transition: background 0.12s;
+  }
+  .guide-print-btn:hover { background: var(--forest-dk); }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--dark);
+    padding: 56px 48px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 440px; height: 440px;
+    border: 1px solid rgba(61,122,96,0.12);
+    border-radius: 50%; pointer-events: none;
+  }
+  .masthead::after {
+    content: '';
+    position: absolute; bottom: -40px; right: 120px;
+    width: 180px; height: 180px;
+    border: 1px solid rgba(61,122,96,0.07);
+    border-radius: 50%; pointer-events: none;
+  }
+
+  .masthead-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 2px; padding: 4px 12px 4px 10px; margin-bottom: 20px;
+  }
+  .masthead-eyebrow-dot { width: 5px; height: 5px; background: var(--forest); border-radius: 50%; }
+  .masthead-eyebrow-text {
+    font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.55);
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+
+  .masthead h1 {
+    font-size: 38px; font-weight: 800; line-height: 1.1;
+    color: white; max-width: 560px; margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+  .masthead h1 em { font-style: italic; color: var(--forest); font-weight: 400; }
+
+  .masthead-sub {
+    font-size: 14px; color: rgba(255,255,255,0.5); max-width: 480px;
+    font-weight: 400; line-height: 1.7; margin-bottom: 28px;
+  }
+
+  .masthead-meta {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .masthead-meta-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 11px; color: rgba(255,255,255,0.3); font-weight: 500;
+  }
+  .masthead-meta-item::before {
+    content: ''; width: 4px; height: 4px;
+    background: var(--forest); border-radius: 50%; opacity: 0.6;
+  }
+
+  /* ── BODY ── */
+  .body-wrap { max-width: 900px; margin: 0 auto; padding: 44px 40px 72px; }
+
+  /* ── INTRO ── */
+  .intro-block {
+    background: var(--paper); border-radius: 2px;
+    border-left: 4px solid var(--forest);
+    border-right: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 28px; margin-bottom: 44px;
+  }
+  .intro-block p { font-size: 13.5px; color: #3a3834; line-height: 1.75; margin-bottom: 12px; }
+  .intro-block p:last-child { margin-bottom: 0; }
+  .intro-block a { color: var(--forest-dk); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+  .intro-block a:hover { color: var(--forest); }
+
+  .tag-ref {
+    display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 2px; vertical-align: middle;
+  }
+  .tag-ref.ko  { background: var(--ko-lt);  color: var(--ko);  }
+  .tag-ref.imp { background: var(--imp-lt); color: var(--imp); }
+  .tag-ref.ctx { background: var(--ctx-lt); color: var(--ctx); }
+
+  /* ── CATEGORIES ── */
+  .category { margin-bottom: 40px; }
+
+  .category-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 12px; padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  .category-header.equity { border-bottom-color: var(--slate); }
+
+  .cat-num {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--forest);
+    background: var(--forest-lt); padding: 3px 9px; border-radius: 2px;
+    border: 1px solid rgba(61,122,96,0.18); flex-shrink: 0;
+  }
+  .cat-num.equity {
+    color: var(--slate); background: var(--slate-lt);
+    border-color: rgba(46,79,106,0.18);
+  }
+  .cat-title { font-weight: 800; font-size: 16px; color: var(--dark); letter-spacing: -0.01em; }
+  .cat-title.equity { color: var(--slate); }
+  .cat-tag {
+    margin-left: auto; font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--mid); border: 1px solid var(--border);
+    padding: 3px 9px; border-radius: 2px; white-space: nowrap;
+  }
+
+  /* ── QUESTION ITEMS ── */
+  .question-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+
+  .q-item {
+    display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: start;
+    background: var(--paper); padding: 14px 16px; border-radius: 2px;
+    border: 1px solid var(--border); border-left: 3px solid var(--border);
+    transition: border-left-color 0.15s;
+  }
+  .q-item:hover { border-color: var(--border-m); border-left-color: var(--border-m); }
+  .q-item.scored-weak    { border-left-color: var(--ko); }
+  .q-item.scored-partial { border-left-color: var(--imp); }
+  .q-item.scored-strong  { border-left-color: var(--forest); }
+
+  .q-text { font-size: 13.5px; line-height: 1.55; color: var(--ink); }
+  .q-text strong { display: block; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .q-note { font-size: 12px; color: var(--mid); margin-top: 5px; line-height: 1.6; }
+
+  .q-right { display: flex; flex-direction: column; align-items: flex-end; gap: 7px; }
+
+  .q-signal {
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 2px; white-space: nowrap; flex-shrink: 0;
+  }
+  .signal-ko  { background: var(--ko-lt);  color: var(--ko);  border: 1px solid rgba(176,60,50,0.2);  }
+  .signal-imp { background: var(--imp-lt); color: var(--imp); border: 1px solid rgba(138,104,40,0.22); }
+  .signal-ctx { background: var(--ctx-lt); color: var(--ctx); border: 1px solid rgba(61,122,96,0.22);  }
+
+  /* ── SCORE BUTTONS ── */
+  .score-buttons { display: flex; gap: 3px; }
+  .sbtn {
+    border: 1px solid var(--border); background: var(--paper); border-radius: 2px;
+    padding: 5px 7px; font-size: 12px; font-weight: 700; cursor: pointer;
+    font-family: 'Manrope', sans-serif; color: var(--mid);
+    display: flex; flex-direction: column; align-items: center; min-width: 34px;
+    transition: all 0.1s; line-height: 1;
+  }
+  .sbtn span { font-size: 7.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.6; margin-top: 2px; }
+  .sbtn:hover { border-color: var(--border-m); background: var(--stone); }
+  .sbtn[data-val="0"].active { background: var(--ko-lt);  border-color: var(--ko);  color: var(--ko);  }
+  .sbtn[data-val="1"].active { background: var(--imp-lt); border-color: var(--imp); color: var(--imp); }
+  .sbtn[data-val="2"].active { background: var(--ctx-lt); border-color: var(--ctx); color: var(--forest-dk); }
+
+  .print-score { display: none; font-size: 10px; color: #888; letter-spacing: 0.05em; white-space: nowrap; }
+
+  /* ── SCORING BOX ── */
+  .scoring-box { background: var(--dark); border-radius: 2px; padding: 28px 32px; margin: 44px 0; }
+  .scoring-box h3 { font-size: 17px; font-weight: 800; color: white; margin-bottom: 6px; letter-spacing: -0.01em; }
+  .scoring-box-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 18px; line-height: 1.6; max-width: 500px; }
+  .score-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .score-cell { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 2px; padding: 15px 18px; }
+  .score-range { font-size: 18px; font-weight: 800; color: var(--forest); display: block; margin-bottom: 5px; letter-spacing: -0.01em; }
+  .score-label { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+
+  /* ── FLAGS ── */
+  .flags-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 36px; }
+
+  .redflags {
+    background: var(--paper); border: 1px solid var(--border);
+    border-top: 3px solid var(--ko); border-radius: 2px; padding: 20px 22px;
+  }
+  .redflags h3 { font-weight: 800; font-size: 11.5px; color: var(--ko); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .redflag-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .redflag-list li { display: flex; gap: 8px; font-size: 12.5px; line-height: 1.5; color: #4a3030; align-items: baseline; }
+  .redflag-list li::before { content: '✕'; color: var(--ko); font-size: 10px; flex-shrink: 0; font-weight: 700; }
+
+  .greensigns {
+    background: var(--paper); border: 1px solid var(--border);
+    border-top: 3px solid var(--forest); border-radius: 2px; padding: 20px 22px;
+  }
+  .greensigns h3 { font-weight: 800; font-size: 11.5px; color: var(--forest-dk); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .greensigns ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .greensigns ul li { display: flex; gap: 8px; font-size: 12.5px; line-height: 1.5; color: #203020; align-items: baseline; }
+  .greensigns ul li::before { content: '✓'; color: var(--forest); font-size: 11px; flex-shrink: 0; font-weight: 700; }
+
+  /* ── SCORING REFERENCE ── */
+  .scoring-ref { margin-top: 56px; }
+  .scoring-ref-dark { background: var(--dark); padding: 28px 32px; border-radius: 2px 2px 0 0; }
+  .scoring-ref-dark h2 { font-size: 20px; font-weight: 800; color: white; margin-bottom: 6px; letter-spacing: -0.01em; }
+  .scoring-ref-dark p { font-size: 12.5px; color: rgba(255,255,255,0.42); line-height: 1.65; max-width: 560px; }
+  .scoring-ref-body {
+    background: var(--paper); border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 2px 2px; padding: 32px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  }
+  .ref-block { }
+  .ref-block.full { grid-column: 1 / -1; }
+  .ref-block h3 {
+    font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--dark); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+
+  .ref-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .ref-table th {
+    text-align: left; font-weight: 700; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--mid); padding: 6px 10px;
+    border-bottom: 1px solid var(--border); background: var(--stone);
+  }
+  .ref-table td { padding: 8px 10px; border-bottom: 1px solid rgba(212,208,200,0.5); font-size: 12.5px; vertical-align: top; }
+  .ref-table tr:last-child td { border-bottom: none; }
+  .ref-table .bold { font-weight: 700; color: var(--ink); }
+
+  .scale-row { display: grid; grid-template-columns: 30px 1fr; gap: 10px; margin-bottom: 12px; align-items: start; }
+  .scale-num {
+    width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-weight: 800; font-size: 12px; flex-shrink: 0;
+  }
+  .scale-num.n2 { background: var(--ctx-lt); color: var(--forest-dk); border: 1px solid rgba(61,122,96,0.35); }
+  .scale-num.n1 { background: var(--imp-lt); color: var(--imp); border: 1px solid rgba(138,104,40,0.3); }
+  .scale-num.n0 { background: var(--ko-lt);  color: var(--ko);  border: 1px solid rgba(176,60,50,0.3); }
+  .scale-def { font-size: 12.5px; color: var(--ink); line-height: 1.55; }
+  .scale-def strong { display: block; font-weight: 700; color: var(--dark); margin-bottom: 2px; }
+
+  .tier-row {
+    display: grid; grid-template-columns: 110px 65px 1fr; gap: 10px;
+    align-items: center; padding: 8px 0;
+    border-bottom: 1px solid rgba(212,208,200,0.4); font-size: 12.5px;
+  }
+  .tier-row:last-child { border-bottom: none; }
+  .tier-row.header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mid); padding-bottom: 6px; }
+  .tier-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border-radius: 2px; text-align: center; }
+  .t-flag  { background: var(--ko-lt);  color: var(--ko); }
+  .t-low   { background: #F5F0EA;       color: #7A6840; }
+  .t-dev   { background: #EDEAE4;       color: #5A5650; }
+  .t-str   { background: #E8F2EC;       color: #2C5A46; }
+  .t-lead  { background: var(--slate-lt); color: var(--slate); }
+  .t-exc   { background: #1B3036;       color: var(--forest); }
+  .tier-pts { font-weight: 700; color: var(--ink); font-size: 12.5px; }
+  .tier-desc { font-size: 12px; color: var(--mid); line-height: 1.5; }
+
+  .ko-item { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid rgba(212,208,200,0.5); }
+  .ko-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .ko-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ko); background: var(--ko-lt); padding: 2px 8px; border-radius: 2px; display: inline-block; margin-bottom: 6px; }
+  .ko-question { font-weight: 700; font-size: 12.5px; color: var(--dark); margin-bottom: 8px; line-height: 1.45; }
+  .ko-criteria { display: flex; flex-direction: column; gap: 5px; }
+  .ko-crit { display: grid; grid-template-columns: 22px 1fr; gap: 8px; font-size: 12px; line-height: 1.5; align-items: baseline; }
+  .kc-num { font-weight: 800; font-size: 11px; text-align: center; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .kc-num.k2 { background: var(--ctx-lt); color: var(--forest-dk); }
+  .kc-num.k1 { background: var(--imp-lt); color: var(--imp); }
+  .kc-num.k0 { background: var(--ko-lt);  color: var(--ko); }
+  .kc-text { color: var(--ink); }
+  .kc-text strong { font-weight: 700; }
+
+  /* ── SCOREBOARD ── */
+  .scoreboard {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--dark); border-top: 2px solid var(--forest);
+    padding: 0 40px; height: 60px;
+    display: flex; align-items: center; gap: 18px;
+    z-index: 300;
+  }
+  .sb-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; text-transform: uppercase; }
+  .sb-divider { width: 1px; height: 26px; background: rgba(255,255,255,0.1); }
+  .sb-stat { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+  .sb-stat-num { font-size: 18px; font-weight: 800; color: white; line-height: 1; }
+  .sb-stat-sub { font-size: 9px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .sb-tier {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 2px;
+  }
+  .tier-notstarted { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); }
+  .tier-low   { background: rgba(176,60,50,0.2);  color: #E08070; }
+  .tier-dev   { background: rgba(200,190,170,0.15); color: #B0A890; }
+  .tier-str   { background: rgba(61,122,96,0.2);  color: #7AC8A0; }
+  .tier-lead  { background: rgba(46,79,106,0.25); color: #88B0C8; }
+  .tier-exc   { background: rgba(61,122,96,0.35); color: #A0D8B8; }
+  .sb-flags {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 700; color: #E08070;
+    background: rgba(176,60,50,0.18); padding: 4px 10px; border-radius: 2px;
+  }
+  .sb-answered { font-size: 10px; color: rgba(255,255,255,0.25); letter-spacing: 0.05em; margin-left: auto; }
+  .sb-reset {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.35); font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 5px 12px; border-radius: 2px; cursor: pointer;
+    font-family: 'Manrope', sans-serif; transition: all 0.12s;
+  }
+  .sb-reset:hover { background: rgba(255,255,255,0.12); color: white; }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    background: var(--dark); padding: 14px 40px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+  .page-footer-left { font-size: 12px; color: rgba(255,255,255,0.38); }
+  .page-footer-left a { color: var(--forest); text-decoration: none; font-weight: 600; }
+  .page-footer-left a:hover { text-decoration: underline; }
+  .page-footer-right { font-size: 11px; color: rgba(255,255,255,0.2); }
+  .print-only { display: none; }
+</style>
+</head>
+<body>
+
+<!-- PRINT PAGE HEADER: position:fixed in @media print, shows on every page -->
+<div class="print-page-header" style="display:none">
+  <span class="pph-left">Sustainability Vetting Guide</span>
+  <span class="pph-right">v1.0 &nbsp;·&nbsp; July 2026</span>
+</div>
+
+<!-- PRINT PAGE FOOTER: position:fixed in @media print, shows on every page -->
+<div class="print-page-footer" style="display:none">
+  <span class="ppf-left">Created by Sarah Gudeman, PE, <a href="https://www.usgbc.org/credentials/leed-fellow" target="_blank" rel="noopener">LEED Fellow</a> &nbsp;·&nbsp; linkedin.com/in/sarahgudeman</span>
+  <span class="ppf-right">© 2026 BranchPattern. All rights reserved.</span>
+</div>
+
+<!-- GUIDE HEADER -->
+<header class="guide-header no-print">
+  <span class="guide-header-title">Sustainability Vetting Guide</span>
+  <div class="guide-header-right">
+    <span class="guide-version">v1.0 · July 2026</span>
+    <button class="guide-print-btn" onclick="window.print()">Print / Save PDF</button>
+  </div>
+</header>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-eyebrow">
+    <div class="masthead-eyebrow-dot"></div>
+    <span class="masthead-eyebrow-text">A Guide for Developers, Designers &amp; Organizations</span>
+  </div>
+  <h1>How to Vet an Engineering Team on <em>Sustainability</em></h1>
+  <p class="masthead-sub">The questions that separate firms who genuinely practice sustainability from those who simply claim it — and what strong answers actually look like.</p>
+  <div class="masthead-meta">
+    <span class="masthead-meta-item">9 Areas · 45 Questions</span>
+    <span class="masthead-meta-item">Max Score: 163 pts</span>
+    <span class="masthead-meta-item">v1.0 · July 2026</span>
+  </div>
+</div>
+
+<div class="body-wrap">
+
+  <!-- INTRO -->
+  <div class="intro-block">
+    <p>The questions that reveal whether a company actually practices sustainability aren't obvious — unless you've spent years inside the work. Because while the vocabulary has become widely distributed, the practice hasn't.</p>
+    <p>Organized across nine areas of inquiry, this guide gives developers, designers, and organizations a structured framework for evaluating consultants — from the commitments they've signed and reported to, to their technical standards, and organizational signals that indicate whether sustainability is embedded in firm culture (or just carried by one person).</p>
+    <p>This guide is intended to help you make more informed decisions when hiring consultants, if your organization cares about forging partnerships with mission-aligned partners. It is a living resource. If you have suggested additions or questions about how to interpret an answer, reach out to <a href="https://www.linkedin.com/in/sarahgudeman" target="_blank">Sarah Gudeman, PE, LEED Fellow</a>.</p>
+    <p><span class="tag-ref ko">Knockout</span> questions are weighted 3× — a score of 0 on any Knockout triggers a flag regardless of total score. <span class="tag-ref imp">Important</span> questions are weighted 2×. <span class="tag-ref ctx">Context</span> questions are weighted 1×. Score each question 0 (Weak), 1 (Partial), or 2 (Strong). See the <a href="#scoring-ref">Scoring Reference</a> at the end for full criteria.</p>
+  </div>
+
+  <!-- ═══════ SECTION 01 ═══════ -->
+  <div class="category">
+    <div class="category-header">
+      <span class="cat-num">01</span>
+      <span class="cat-title">Industry Commitments &amp; Accountability</span>
+      <span class="cat-tag">Commitments</span>
+    </div>
+    <ul class="question-list">
+      <li class="q-item">
+        <div class="q-text"><strong>Are you a signatory of the <a href="https://www.mep2040.org" target="_blank" rel="noopener">MEP 2040 Commitment</a>? Do you have a published Company Plan, and do you participate in quarterly Forum sessions?</strong>
+        <div class="q-note"><a href="https://www.mep2040.org" target="_blank" rel="noopener">MEP 2040</a> requires zero operational carbon by 2030 and zero embodied carbon across all MEP systems by 2040. The four commitments are: company plan, annual reporting, request low-GWP refrigerants, request EPDs in specs. A published Company Plan and forum participation distinguish intent from practice.</div></div>
+        <div class="q-right"><span class="q-signal signal-ko">Knockout</span>
+          <div class="score-buttons no-print" data-qid="q01"><button class="sbtn" data-val="0" onclick="score('q01',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q01',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q01',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Are you a signatory of the <a href="https://www.aia.org/design-excellence/climate-action/zero-carbon/2030-commitment" target="_blank" rel="noopener">AIA 2030 Commitment</a>? Do you report annually to the <a href="https://2030ddx.aia.org" target="_blank" rel="noopener">Design Data Exchange (DDx)</a>?</strong>
+        <div class="q-note">The <a href="https://2030ddx.aia.org" target="_blank" rel="noopener">DDx</a> is the accountability mechanism — signing without annual reporting is performative. Current target (2025–2029): 90% pEUI reduction vs. CBECS 2003 baseline, scaling to 100% carbon neutral by 2030. Industry average: approximately 50%.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q02"><button class="sbtn" data-val="0" onclick="score('q02',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q02',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q02',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Have you adopted the <a href="https://se2050.org" target="_blank" rel="noopener">SE 2050 Commitment</a>?</strong> (Relevant for structural engineering firms)
+        <div class="q-note"><a href="https://se2050.org" target="_blank" rel="noopener">SE 2050</a> asks structural engineers to eliminate embodied carbon in structural systems by 2050. Look for a published <a href="https://se2050.org" target="_blank" rel="noopener">Embodied Carbon Action Plan (ECAP)</a> covering education, reporting, reduction, and advocacy — not just a signed pledge.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q03"><button class="sbtn" data-val="0" onclick="score('q03',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q03',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q03',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Are you a signatory of <a href="https://www.theclimatepledge.com" target="_blank" rel="noopener">The Climate Pledge</a>?</strong> Do you report annual progress in alignment with the Paris Agreement?
+        <div class="q-note"><a href="https://www.theclimatepledge.com" target="_blank" rel="noopener">The Climate Pledge</a> commits signatories to net-zero carbon across their own operations by 2040, with interim annual reporting. Unlike industry-specific pledges, TCP spans sectors and applies to the firm's full operational footprint.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q04"><button class="sbtn" data-val="0" onclick="score('q04',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q04',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q04',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>What other climate commitments is your firm a signatory of?</strong>
+        <div class="q-note">Examples: <a href="https://carbonleadershipforum.org" target="_blank" rel="noopener">Carbon Leadership Forum</a>, <a href="https://www.worldgbc.org/net-zero-carbon-buildings-commitment" target="_blank" rel="noopener">World GBC Net Zero Carbon Buildings Commitment</a>, <a href="https://greencommons.net/peer-networks" target="_blank" rel="noopener">Green Commons Peer Networks</a>. Multiple commitments signal organizational culture, not individual effort.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q05"><button class="sbtn" data-val="0" onclick="score('q05',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q05',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q05',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ═══════ SECTION 02 ═══════ -->
+  <div class="category">
+    <div class="category-header">
+      <span class="cat-num">02</span>
+      <span class="cat-title">Carbon Disclosure, Reporting &amp; Own-Operations Accountability</span>
+      <span class="cat-tag">Transparency</span>
+    </div>
+    <ul class="question-list">
+      <li class="q-item">
+        <div class="q-text"><strong>Do you quantify and disclose your Scope 1, 2, and 3 greenhouse gas emissions?</strong>
+        <div class="q-note">Scope 1 = direct emissions (vehicles, refrigerant leaks). Scope 2 = purchased energy. Scope 3 = supply chain, travel, purchased goods, and — critically — embodied and operational carbon of buildings the firm designs. Firms tracking only Scope 1 and 2 are reporting a fraction of their actual impact.</div></div>
+        <div class="q-right"><span class="q-signal signal-ko">Knockout</span>
+          <div class="score-buttons no-print" data-qid="q06"><button class="sbtn" data-val="0" onclick="score('q06',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q06',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q06',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Has your firm published an ESG report? What framework guides your methodology — <a href="https://www.globalreporting.org" target="_blank" rel="noopener">GRI</a>, <a href="https://sasb.org" target="_blank" rel="noopener">SASB</a>, <a href="https://www.fsb-tcfd.org" target="_blank" rel="noopener">TCFD</a>, or equivalent?</strong>
+        <div class="q-note">A recognized framework structures ESG disclosure in a way that is comparable, auditable, and less susceptible to greenwashing. Look for emissions intensity per FTE or per square foot of work — not just absolute values that grow with firm size.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q07"><button class="sbtn" data-val="0" onclick="score('q07',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q07',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q07',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Have you completed a double materiality assessment — evaluating both your operational impact on ESG issues and their strategic importance to your stakeholders?</strong>
+        <div class="q-note">Double materiality evaluates from two directions: how external ESG factors affect the firm's business (financial materiality) and how the firm's activities affect the environment and society (impact materiality). Aligned with <a href="https://www.globalreporting.org" target="_blank" rel="noopener">GRI</a> standards and the EU CSRD framework.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q08"><button class="sbtn" data-val="0" onclick="score('q08',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q08',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q08',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Does your firm have a published Sustainability Action Plan (SAP)?</strong> Is it publicly available?
+        <div class="q-note">Both the <a href="https://www.aia.org/design-excellence/climate-action/zero-carbon/2030-commitment" target="_blank" rel="noopener">AIA 2030 Commitment</a> and <a href="https://se2050.org" target="_blank" rel="noopener">SE 2050</a> require SAPs within the first six months of signing. A SAP should include measurable targets, a timeline, and named accountability — not just aspirational language.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q09"><button class="sbtn" data-val="0" onclick="score('q09',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q09',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q09',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Has your firm received a third-party ESG rating, such as <a href="https://ecovadis.com" target="_blank" rel="noopener">EcoVadis</a>?</strong> What rating tier, and when was it last assessed?
+        <div class="q-note"><a href="https://ecovadis.com" target="_blank" rel="noopener">EcoVadis</a> rates organizations across environment, labor/human rights, ethics, and sustainable procurement, placing firms in percentile rankings against peers. A Silver rating (approximately top 25%) or higher reflects verified, third-party-confirmed ESG performance. Ask for the scorecard — it's shareable.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q10"><button class="sbtn" data-val="0" onclick="score('q10',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q10',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q10',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you have a structured carbon offset strategy?</strong> How do you sequence offsets relative to direct emissions reductions?
+        <div class="q-note">Offsets are a legitimate tool of last resort — after direct reductions have been maximized. Look for: a stated sequencing principle (reduce first, offset last); high-quality credits meeting additionality and permanence criteria; and third-party verification of offset quality.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q11"><button class="sbtn" data-val="0" onclick="score('q11',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q11',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q11',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ═══════ SECTION 03 ═══════ -->
+  <div class="category">
+    <div class="category-header">
+      <span class="cat-num">03</span>
+      <span class="cat-title">Refrigerants &amp; Embodied Carbon in MEP Systems</span>
+      <span class="cat-tag">Technical Practice</span>
+    </div>
+    <ul class="question-list">
+      <li class="q-item">
+        <div class="q-text"><strong>What is your standard practice for refrigerant specification?</strong> Are you actively specifying low-GWP refrigerants — A2L class (R-454B, R-32), natural refrigerants, or GWP below 700?
+        <div class="q-note">R-410A (GWP 2,088) is no longer available in new residential and light commercial equipment as of January 2025. A leading firm specifies low-GWP proactively, can name current specified refrigerants with GWP values, and can articulate the A2L transition rationale — not just cite compliance.</div></div>
+        <div class="q-right"><span class="q-signal signal-ko">Knockout</span>
+          <div class="score-buttons no-print" data-qid="q12"><button class="sbtn" data-val="0" onclick="score('q12',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q12',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q12',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do your specifications request EPDs for MEP equipment?</strong> Can you show us example spec language?
+        <div class="q-note">The <a href="https://www.mep2040.org" target="_blank" rel="noopener">MEP 2040 Commitment</a> requires EPD requests in project specifications. Asking to see actual language — not a description of intent — is the real test. It separates practice from policy.</div></div>
+        <div class="q-right"><span class="q-signal signal-ko">Knockout</span>
+          <div class="score-buttons no-print" data-qid="q13"><button class="sbtn" data-val="0" onclick="score('q13',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q13',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q13',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you conduct Whole Building Life Cycle Assessments (WBLCAs)?</strong> Do you have access to embodied carbon benchmarking data across building types?
+        <div class="q-note">WBLCAs quantify embodied carbon across structure, envelope, MEP equipment, and sitework. Firms that conduct them make evidence-based material and system decisions rather than relying on assumptions. Benchmark access enables comparison against peer buildings.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q14"><button class="sbtn" data-val="0" onclick="score('q14',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q14',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q14',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you use the <a href="https://www.buildingtransparency.org" target="_blank" rel="noopener">EC3 tool</a> or equivalent for MEP lifecycle analysis?</strong>
+        <div class="q-note"><a href="https://www.buildingtransparency.org" target="_blank" rel="noopener">EC3</a> is the <a href="https://carbonleadershipforum.org" target="_blank" rel="noopener">Carbon Leadership Forum</a>'s primary EPD database and analysis platform. A firm engaged with embodied carbon should know and use it actively.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q15"><button class="sbtn" data-val="0" onclick="score('q15',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q15',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q15',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you calculate TEWI or LCCP for refrigerant system selection?</strong>
+        <div class="q-note">Total Equivalent Warming Impact (TEWI) and Lifecycle Climate Performance (LCCP) capture both refrigerant leakage and operational energy — the full climate picture over equipment lifespan, not just nameplate GWP.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q16"><button class="sbtn" data-val="0" onclick="score('q16',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q16',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q16',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ═══════ SECTION 04 ═══════ -->
+  <div class="category">
+    <div class="category-header">
+      <span class="cat-num">04</span>
+      <span class="cat-title">Ventilation, Indoor Air Quality &amp; Occupant Health</span>
+      <span class="cat-tag">Indoor Environment</span>
+    </div>
+    <ul class="question-list">
+      <li class="q-item">
+        <div class="q-text"><strong>What is your standard of practice for ventilation calculations — prescriptive <a href="https://www.ashrae.org/technical-resources/bookstore/standards-62-1-62-2" target="_blank" rel="noopener">ASHRAE 62.1</a> compliance, or performance-based optimization?</strong>
+        <div class="q-note">Leading firms optimize ventilation rates using energy analysis rather than defaulting to prescriptive minimums. Ask about DCV, occupancy input methodology, and whether ventilation is modeled as part of broader energy and IAQ analysis. "We meet code" is not a strong answer.</div></div>
+        <div class="q-right"><span class="q-signal signal-ko">Knockout</span>
+          <div class="score-buttons no-print" data-qid="q17"><button class="sbtn" data-val="0" onclick="score('q17',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q17',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q17',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you design beyond minimum ventilation standards — WELL, <a href="https://www.fitwel.org" target="_blank" rel="noopener">Fitwel</a>, <a href="https://reset.build" target="_blank" rel="noopener">RESET Air</a>, or <a href="https://www.ashrae.org/technical-resources/bookstore/standards-62-1-62-2" target="_blank" rel="noopener">ASHRAE 62.1 Enhanced Ventilation</a>?</strong>
+        <div class="q-note">Minimum code compliance is the floor. Ask specifically about their approach to high-density, healthcare-adjacent, or vulnerable-population spaces.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q18"><button class="sbtn" data-val="0" onclick="score('q18',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q18',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q18',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>What is your approach to filtration specification?</strong> What is your baseline, and when do you escalate to HEPA-level filtration?
+        <div class="q-note">MERV-13 has become the widely recommended post-pandemic commercial minimum, though code requirements vary by jurisdiction. Stronger engineers articulate the pressure drop vs. particle capture tradeoff and have a clear decision framework for escalation.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q19"><button class="sbtn" data-val="0" onclick="score('q19',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q19',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q19',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you specify continuous air quality monitoring (CO₂, PM2.5, VOCs, humidity) integrated into building automation systems?</strong>
+        <div class="q-note">Passive design is insufficient — monitoring enables verification. Ask if they design sensor-to-controls feedback loops, and whether occupants and operators have visibility into real-time air quality data.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q20"><button class="sbtn" data-val="0" onclick="score('q20',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q20',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q20',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>How do you approach IAQ verification post-occupancy?</strong>
+        <div class="q-note">Design intent and installed performance are different things. Firms serious about IAQ design for verification — flush-out procedures, post-construction testing, ongoing monitoring — not just permit compliance.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q21"><button class="sbtn" data-val="0" onclick="score('q21',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q21',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q21',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ═══════ SECTION 05 ═══════ -->
+  <div class="category">
+    <div class="category-header">
+      <span class="cat-num">05</span>
+      <span class="cat-title">Energy Analysis &amp; Performance Verification</span>
+      <span class="cat-tag">Data &amp; Evidence</span>
+    </div>
+    <ul class="question-list">
+      <li class="q-item">
+        <div class="q-text"><strong>What is your standard practice for energy analysis on your projects?</strong> For projects where you provide MEP or building science services only, how do you capture or contribute to whole-building energy performance data?
+        <div class="q-note">For integrated design firms: whole-building modeling should begin at schematic design on all projects. For MEP/building science consultants: the question shifts to how they track influence on building performance when they don't control the model — Do they push clients toward modeling? Do they track actual energy outcomes? Are they contributing to <a href="https://www.aia.org/design-excellence/climate-action/zero-carbon/2030-commitment" target="_blank" rel="noopener">AIA 2030</a> <a href="https://2030ddx.aia.org" target="_blank" rel="noopener">DDx</a> reporting?</div></div>
+        <div class="q-right"><span class="q-signal signal-ko">Knockout</span>
+          <div class="score-buttons no-print" data-qid="q22"><button class="sbtn" data-val="0" onclick="score('q22',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q22',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q22',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>What is your firm's average pEUI reduction across your reported portfolio?</strong>
+        <div class="q-note"><a href="https://www.aia.org/design-excellence/climate-action/zero-carbon/2030-commitment" target="_blank" rel="noopener">AIA 2030</a> <a href="https://2030ddx.aia.org" target="_blank" rel="noopener">DDx</a> reporters can pull this data directly. The industry average is approximately 50%. Current target (2025–2029): 90% reduction vs. CBECS 2003 baseline. Ask where they sit and what's driving the gap.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q23"><button class="sbtn" data-val="0" onclick="score('q23',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q23',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q23',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you track post-occupancy energy use?</strong> Can you share examples of design intent vs. actual EUI?
+        <div class="q-note">The gap between predicted and actual performance is where most buildings fail. Firms that track actuals learn from them. Firms that don't are designing in the dark.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q24"><button class="sbtn" data-val="0" onclick="score('q24',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q24',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q24',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Have you designed projects targeting zero energy or zero carbon, with post-occupancy data to confirm performance?</strong>
+        <div class="q-note">Zero energy and zero carbon are distinct goals. Ask them to explain the difference and name the verification pathway: <a href="https://www.phius.org" target="_blank" rel="noopener">PHIUS</a>, <a href="https://living-future.org/lbc/" target="_blank" rel="noopener">LBC Zero Energy</a>, <a href="https://www.energy.gov/eere/buildings/zero-energy-ready-home" target="_blank" rel="noopener">DOE Zero Energy Ready</a>, <a href="https://www.ashrae.org/technical-resources/bookstore/ansi-ashrae-standard-228-standard-method-of-evaluating-zero-net-energy-and-zero-net-carbon-building-performance" target="_blank" rel="noopener">ASHRAE 228</a>. Post-occupancy utility data is the only real proof.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q25"><button class="sbtn" data-val="0" onclick="score('q25',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q25',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q25',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ═══════ SECTION 06 ═══════ -->
+  <div class="category">
+    <div class="category-header">
+      <span class="cat-num">06</span>
+      <span class="cat-title">Credentials, Certification Experience &amp; Organizational Designations</span>
+      <span class="cat-tag">Credentials</span>
+    </div>
+    <ul class="question-list">
+      <li class="q-item">
+        <div class="q-text"><strong>What is the difference between a legacy LEED AP and a LEED AP with specialty — and which does your team primarily hold?</strong>
+        <div class="q-note">Legacy LEED APs (pre-2009) reflect a general knowledge baseline. LEED AP+ credentials (BD+C, O+M, ID+C, ND, Homes) require ongoing continuing education. BD+C is by far the most common specialty — O+M and ID+C are significantly rarer, requiring demonstrated experience in existing buildings operations or commercial interiors. Distributed O+M and ID+C holders signal lifecycle expertise.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q26"><button class="sbtn" data-val="0" onclick="score('q26',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q26',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q26',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you have <a href="https://www.usgbc.org/credentials/leed-fellow" target="_blank" rel="noopener">LEED Fellow</a>s on staff?</strong>
+        <div class="q-note"><a href="https://www.usgbc.org/credentials/leed-fellow" target="_blank" rel="noopener">LEED Fellow</a> is the highest individual credential in the green building field — awarded to fewer than 500 professionals worldwide. It requires 10+ years of demonstrated leadership, peer nomination, and a rigorous multi-round portfolio review. It cannot be purchased or fast-tracked.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q27"><button class="sbtn" data-val="0" onclick="score('q27',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q27',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q27',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>What other active credentials does your team hold across commissioning, energy, carbon, health, and smart buildings?</strong>
+        <div class="q-note">Look for: <a href="https://www.ashrae.org/professional-development/ashrae-certification/certification-types/bcxp-building-commissioning-professional-certification" target="_blank" rel="noopener">BCxP</a>, <a href="https://www.commissioning.org/" target="_blank" rel="noopener">CxA</a> (commissioning); <a href="https://www.aeecenter.org/certifications/cem" target="_blank" rel="noopener">CEM</a>, <a href="https://www.ashrae.org/professional-development/certification/bemp" target="_blank" rel="noopener">BEMP</a>, <a href="https://www.ashrae.org/professional-development/certification/cdp" target="_blank" rel="noopener">CDP — ASHRAE Certified Decarbonization Professional</a>, <a href="https://www.ashrae.org/professional-development/certification/hbdp" target="_blank" rel="noopener">HBDP — ASHRAE High-Performance Building Design Professional</a>, <a href="https://www.ashrae.org/professional-development/certification/hfdp" target="_blank" rel="noopener">HFDP — ASHRAE Healthcare Facility Design Professional</a> (energy/carbon); <a href="https://www.wellcertified.com/credentials/well-ap" target="_blank" rel="noopener">WELL AP</a>, <a href="https://www.wellcertified.com/credentials" target="_blank" rel="noopener">WELL Faculty</a> (health); <a href="https://www.fitwel.org" target="_blank" rel="noopener">Fitwel</a> Ambassador; <a href="https://wiredscore.com" target="_blank" rel="noopener">WiredScore AP</a>, <a href="https://wiredscore.com/smartscore" target="_blank" rel="noopener">SmartScore AP</a>; <a href="https://www.phius.org" target="_blank" rel="noopener">CPHC (Passive House)</a>. Distribution across the team matters more than total count.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q28"><button class="sbtn" data-val="0" onclick="score('q28',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q28',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q28',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Is your firm a <a href="https://www.usgbc.org/resources/leed-proven-provider-handbook" target="_blank" rel="noopener">LEED Proven Provider</a>?</strong> If so, for which rating system families?
+        <div class="q-note"><a href="https://www.usgbc.org/resources/leed-proven-provider-handbook" target="_blank" rel="noopener">LEED Proven Provider</a> is a <a href="https://www.gbci.org" target="_blank" rel="noopener">GBCI</a> organizational designation requiring a minimum of six certified projects in the same rating system family where the firm served as Project Administrator. Proven Provider firms receive abbreviated <a href="https://www.gbci.org" target="_blank" rel="noopener">GBCI</a> reviews (~10–15 business days vs. the standard 25). Signals a sustained, verifiable track record.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q29"><button class="sbtn" data-val="0" onclick="score('q29',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q29',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q29',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Does your organization hold a <a href="https://www.wellcertified.com/enterprise-providers" target="_blank" rel="noopener">WELL Enterprise Provider (WELL EP)</a> designation?</strong>
+        <div class="q-note"><a href="https://www.wellcertified.com/enterprise-providers" target="_blank" rel="noopener">WELL EP</a> is an <a href="https://www.wellcertified.com" target="_blank" rel="noopener">IWBI</a> organizational designation — distinct from individual <a href="https://www.wellcertified.com/credentials/well-ap" target="_blank" rel="noopener">WELL AP</a> credentials — awarded to firms delivering WELL solutions at portfolio or enterprise scale. Requires demonstrated multi-project experience, minimum <a href="https://www.wellcertified.com/credentials/well-ap" target="_blank" rel="noopener">WELL AP</a> threshold on staff, and <a href="https://www.wellcertified.com" target="_blank" rel="noopener">IWBI</a> Keystone membership.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q30"><button class="sbtn" data-val="0" onclick="score('q30',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q30',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q30',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Are you familiar with <a href="https://www.usgbc.org/leed/v5" target="_blank" rel="noopener">LEEDv5</a>?</strong> How is your team preparing for changes in prerequisites, credits, and carbon focus?
+        <div class="q-note"><a href="https://www.usgbc.org/leed/v5" target="_blank" rel="noopener">LEEDv5</a> significantly expands focus on embodied carbon, resilience, and human health across BD+C, ID+C, and O+M. Firms not actively tracking this will be caught unprepared within two to three years.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q31"><button class="sbtn" data-val="0" onclick="score('q31',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q31',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q31',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ═══════ SECTION 07 ═══════ -->
+  <div class="category">
+    <div class="category-header">
+      <span class="cat-num">07</span>
+      <span class="cat-title">Electrification &amp; Decarbonization Strategy</span>
+      <span class="cat-tag">Future-Readiness</span>
+    </div>
+    <ul class="question-list">
+      <li class="q-item">
+        <div class="q-text"><strong>What is your firm's default position on fossil fuel systems in new construction?</strong>
+        <div class="q-note">The right answer is all-electric as the documented default, with gas systems requiring a written client request and documented rationale — not the reverse. "We do what the client asks" is not a sustainability position; it is an absence of one.</div></div>
+        <div class="q-right"><span class="q-signal signal-ko">Knockout</span>
+          <div class="score-buttons no-print" data-qid="q32"><button class="sbtn" data-val="0" onclick="score('q32',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q32',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q32',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you have demonstrated experience designing cold-climate heat pump systems as primary heating and cooling?</strong>
+        <div class="q-note">Cold-climate heat pump design requires different assumptions, equipment selection, backup strategies, and design heating temperatures. Ask for specific project examples and the outdoor design conditions they engineered to.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q33"><button class="sbtn" data-val="0" onclick="score('q33',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q33',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q33',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>How do you approach decarbonization retrofit assessments for existing buildings?</strong>
+        <div class="q-note">Retrofit decarbonization is the dominant market challenge of the next two decades. Firms with a repeatable, structured methodology — not just case-by-case engineering — are more valuable for portfolio owners.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q34"><button class="sbtn" data-val="0" onclick="score('q34',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q34',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q34',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ═══════ SECTION 08 ═══════ -->
+  <div class="category">
+    <div class="category-header equity">
+      <span class="cat-num equity">08</span>
+      <span class="cat-title equity">DEI, Equity &amp; Organizational Values</span>
+      <span class="cat-tag">Culture &amp; Values</span>
+    </div>
+    <ul class="question-list">
+      <li class="q-item">
+        <div class="q-text"><strong>Does your firm hold a <a href="https://living-future.org/just/" target="_blank" rel="noopener">Living Future JUST Label</a>, <a href="https://www.bcorporation.net" target="_blank" rel="noopener">B Corp certification</a>, or another third-party organizational transparency designation?</strong>
+        <div class="q-note">The <a href="https://living-future.org/just/" target="_blank" rel="noopener">JUST Label</a> requires public disclosure across six categories and 21 indicators scored on a tiered framework. <a href="https://www.bcorporation.net" target="_blank" rel="noopener">B Corp certification</a> similarly requires verified performance across governance, workers, community, and environment. Either signals the firm has submitted its organizational practices to external scrutiny — not just published a values statement.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q35"><button class="sbtn" data-val="0" onclick="score('q35',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q35',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q35',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you have a formal DEI commitment — and how is it operationalized?</strong>
+        <div class="q-note">Ask for specifics: designated lead or committee; measurable goals with regular reporting; signed external commitment; internal initiatives with documented outcomes. Statements of intent without structure or measurement are not commitments.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q36"><button class="sbtn" data-val="0" onclick="score('q36',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q36',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q36',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you survey your employees on workplace culture?</strong> Do you participate in Best Places to Work or equivalent third-party programs?
+        <div class="q-note">Firms that listen to their employees retain them — stable, tenured staff deliver better outcomes on complex projects. Ask whether employee feedback actually changes firm policy, not just informs it.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q37"><button class="sbtn" data-val="0" onclick="score('q37',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q37',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q37',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>What is your firm's ownership structure?</strong>
+        <div class="q-note">Employee-owned firms (ESOPs, partnerships, cooperatives) tend to have lower turnover, stronger alignment between stated values and individual behavior, and deeper institutional memory. Ownership structure reveals incentive alignment in ways stated culture often doesn't.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q38"><button class="sbtn" data-val="0" onclick="score('q38',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q38',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q38',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you have a policy on pro bono or reduced-fee work for community, nonprofit, or under-resourced clients?</strong>
+        <div class="q-note">Firms with genuine equity commitments extend sustainability expertise beyond their paying client base. This reveals whether values are held selectively or broadly.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q39"><button class="sbtn" data-val="0" onclick="score('q39',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q39',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q39',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ═══════ SECTION 09 ═══════ -->
+  <div class="category">
+    <div class="category-header">
+      <span class="cat-num">09</span>
+      <span class="cat-title">Firm Culture &amp; Project Integration</span>
+      <span class="cat-tag">Culture</span>
+    </div>
+    <ul class="question-list">
+      <li class="q-item">
+        <div class="q-text"><strong>How is sustainability integrated into your QA/QC process?</strong> Are there formal checkpoints where energy performance and carbon impact are reviewed before project milestones?
+        <div class="q-note">Sustainability should be embedded in standard workflow — not added at the end or triggered by client request. Ask to see a project checklist or quality control document. If they can't produce one, it isn't systematized.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q40"><button class="sbtn" data-val="0" onclick="score('q40',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q40',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q40',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Can you share two or three projects where sustainability constraints drove a design decision that materially changed the outcome?</strong>
+        <div class="q-note">Generic examples signal sustainability as an add-on. Specific anecdotes with data — EUI before and after, refrigerant GWP, cost delta, commissioning findings — signal genuine integration. Press for numbers.</div></div>
+        <div class="q-right"><span class="q-signal signal-imp">Important</span>
+          <div class="score-buttons no-print" data-qid="q41"><button class="sbtn" data-val="0" onclick="score('q41',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q41',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q41',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Have you pursued formal certification or performance verification for your own office space?</strong>
+        <div class="q-note">A firm that consults on LEED, <a href="https://www.fitwel.org" target="_blank" rel="noopener">Fitwel</a>, <a href="https://www.energystar.gov" target="_blank" rel="noopener">ENERGY STAR</a>, or WELL but hasn't applied those standards to its own space is not practicing what it preaches. Ask specifically: Is your office LEED certified? What is its <a href="https://www.energystar.gov" target="_blank" rel="noopener">ENERGY STAR</a> score? Has it been <a href="https://www.fitwel.org" target="_blank" rel="noopener">Fitwel</a> certified? Benchmarked through <a href="https://arcskoru.com" target="_blank" rel="noopener">Arc PERFORM</a>?</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q42"><button class="sbtn" data-val="0" onclick="score('q42',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q42',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q42',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do you have a supply chain sustainability policy that applies environmental and social standards to your vendors and subconsultants?</strong>
+        <div class="q-note">Look for: supplier screening criteria that include environmental consciousness and ethical practices; alignment with standards like the <a href="https://www.responsiblebusiness.org/code-of-conduct/" target="_blank" rel="noopener">RBA Code of Conduct</a>; documented procurement practices. Firms that ignore their supply chain are reporting an incomplete ESG picture.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q43"><button class="sbtn" data-val="0" onclick="score('q43',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q43',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q43',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>What happens when a client declines sustainability recommendations?</strong> How do you document and respond to that decision?
+        <div class="q-note">How a firm handles pushback reveals whether sustainability is principle or preference. Look for documentation protocols and honest dialogue — not immediate deference to avoid discomfort.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q44"><button class="sbtn" data-val="0" onclick="score('q44',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q44',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q44',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">☐ 0 &nbsp;☐ 1 &nbsp;☐ 2</div></div>
+      </li>
+      <li class="q-item">
+        <div class="q-text"><strong>Do members of your firm actively participate in standards development, code committees, or technical working groups?</strong>
+        <div class="q-note">Active participation in USGBC/GBCI technical advisory groups (including LEEDv5 development), ASHRAE technical committees (Standards 90.1, 62.1, or 228), AIA committees such as COTE, ICC energy code development, or Living Future program development signals that a firm is shaping future standards — not merely complying with current ones. Ask which committees, in what role: reviewing and commenting is different from authoring, voting, or chairing.</div></div>
+        <div class="q-right"><span class="q-signal signal-ctx">Context</span>
+          <div class="score-buttons no-print" data-qid="q45"><button class="sbtn" data-val="0" onclick="score('q45',0)">0<span>Weak</span></button><button class="sbtn" data-val="1" onclick="score('q45',1)">1<span>Partial</span></button><button class="sbtn" data-val="2" onclick="score('q45',2)">2<span>Strong</span></button></div>
+          <div class="print-score print-only">&#9744; 0 &nbsp;&#9744; 1 &nbsp;&#9744; 2</div></div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SCORING BOX -->
+  <div class="scoring-box">
+    <h3>Performance Tiers</h3>
+    <p class="scoring-box-sub">Any Knockout scored 0 triggers a flag regardless of total score. A flag requires explicit discussion before engagement — it does not automatically disqualify.</p>
+    <div class="score-grid">
+      <div class="score-cell"><span class="score-range">All KOs ✓</span><div class="score-label">Minimum threshold to proceed on any project where sustainability is a stated goal.</div></div>
+      <div class="score-cell"><span class="score-range">≥ 96 pts (59%)</span><div class="score-label">Strong — appropriate for LEED, WELL, or performance-based projects.</div></div>
+      <div class="score-cell"><span class="score-range">≥ 137 pts (85%)</span><div class="score-label">Exceptional — peer-level practice; appropriate for LBC, zero carbon, or where sustainability is non-negotiable.</div></div>
+    </div>
+  </div>
+
+  <!-- FLAGS -->
+  <div class="flags-grid">
+    <div class="redflags">
+      <h3>Red Flags in Answers</h3>
+      <ul class="redflag-list">
+        <li>Citing LEED certification as proof of practice without naming the credits they led</li>
+        <li>"We comply with code" as the answer to any performance question</li>
+        <li>Can't name GWP values for the refrigerants they specify, or explain A2L classification</li>
+        <li>Claims <a href="https://www.mep2040.org" target="_blank" rel="noopener">MEP 2040</a> or <a href="https://www.aia.org/design-excellence/climate-action/zero-carbon/2030-commitment" target="_blank" rel="noopener">AIA 2030</a> status but no Company Plan, no <a href="https://2030ddx.aia.org" target="_blank" rel="noopener">DDx</a> reporting, no forum participation</li>
+        <li>Sustainability described as triggered by client request rather than a firm-wide default</li>
+        <li>Conflating energy efficiency with decarbonization — high-efficiency gas offered as a "sustainability" answer</li>
+        <li>No post-occupancy data, or unwillingness to discuss predicted vs. actual performance gaps</li>
+        <li>One sustainability champion in a large firm with no organizational infrastructure behind them</li>
+        <li>ESG report published without a named framework guiding methodology</li>
+        <li>Carbon offsets leading the conversation before direct reductions have been addressed</li>
+      </ul>
+    </div>
+    <div class="greensigns">
+      <h3>Green Signs in Answers</h3>
+      <ul>
+        <li>Unprompted mention of embodied carbon alongside operational carbon — understanding they require different strategies</li>
+        <li>Specific project examples with real EUI numbers and honest discussion of what didn't work</li>
+        <li>Active credentials distributed across the team, not concentrated in one person</li>
+        <li>EPD and low-GWP refrigerant spec language they can show immediately</li>
+        <li>WBLCA experience with access to embodied carbon benchmarking data</li>
+        <li>Familiarity with <a href="https://www.usgbc.org/leed/v5" target="_blank" rel="noopener">LEEDv5</a> with a concrete transition plan</li>
+        <li>A clear firm-wide electrification position that doesn't require a client to request it</li>
+        <li>Active participation in <a href="https://carbonleadershipforum.org" target="_blank" rel="noopener">CLF</a>, ASHRAE, <a href="https://www.mep2040.org" target="_blank" rel="noopener">MEP 2040</a> forums, or Living Future working groups</li>
+        <li>Post-occupancy tracking as standard practice, not an exception</li>
+        <li><a href="https://living-future.org/just/" target="_blank" rel="noopener">JUST Label</a>, <a href="https://www.bcorporation.net" target="_blank" rel="noopener">B Corp</a>, <a href="https://ecovadis.com" target="_blank" rel="noopener">EcoVadis</a> Silver or higher, or equivalent third-party ESG transparency</li>
+        <li><a href="https://www.usgbc.org/resources/leed-proven-provider-handbook" target="_blank" rel="noopener">LEED Proven Provider</a> or <a href="https://www.wellcertified.com/enterprise-providers" target="_blank" rel="noopener">WELL EP</a> designation — sustained, verified organizational performance</li>
+        <li>Their own office certified or formally benchmarked — they've been through the process themselves</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCORING REFERENCE -->
+  <section class="scoring-ref" id="scoring-ref">
+    <div class="scoring-ref-dark">
+      <h2>Scoring Reference</h2>
+      <p>This guide uses a weighted point system. Every question is scored 0–2, multiplied by question weight. The total provides a comparable benchmark across firms — but how you apply the tiers should reflect your project's sustainability ambition.</p>
+    </div>
+    <div class="scoring-ref-body">
+
+      <div class="ref-block">
+        <h3>How Points Work</h3>
+        <table class="ref-table">
+          <thead><tr><th>Type</th><th>Weight</th><th>Max / Question</th></tr></thead>
+          <tbody>
+            <tr><td class="bold">Knockout (7 questions)</td><td>× 3</td><td>6 pts</td></tr>
+            <tr><td class="bold">Important (23 questions)</td><td>× 2</td><td>4 pts</td></tr>
+            <tr><td class="bold">Context (14 questions)</td><td>× 1</td><td>2 pts</td></tr>
+            <tr style="background:var(--stone)"><td class="bold">Maximum Total</td><td></td><td class="bold">163 pts</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ref-block">
+        <h3>Score Definitions</h3>
+        <div class="scale-row"><div class="scale-num n2">2</div><div class="scale-def"><strong>Strong</strong>Specific, verifiable, demonstrated with evidence. Can produce documentation on the spot — spec language, reports, post-occupancy data, policy documents. The claim is backed by the artifact.</div></div>
+        <div class="scale-row"><div class="scale-num n1">1</div><div class="scale-def"><strong>Partial</strong>Claims compliance but the answer is vague, evidence is unavailable in the moment, or the firm is "working toward it." Correct directionally, incomplete in practice.</div></div>
+        <div class="scale-row"><div class="scale-num n0">0</div><div class="scale-def"><strong>Weak</strong>No; doesn't know; deflects; or the stated position contradicts the question. Includes "we do what the client asks" for commitment and electrification questions.</div></div>
+      </div>
+
+      <div class="ref-block full">
+        <h3>Performance Tiers</h3>
+        <div class="tier-row header"><div>Tier</div><div>Points</div><div>Description</div></div>
+        <div class="tier-row"><span class="tier-badge t-flag">⚑ Flag</span><span class="tier-pts">Any KO = 0</span><span class="tier-desc">Knockout scored 0 regardless of total. Must be discussed and resolved before engagement on sustainability-integrated work.</span></div>
+        <div class="tier-row"><span class="tier-badge t-low">Not Aligned</span><span class="tier-pts">&lt; 65 pts</span><span class="tier-desc">Sustainability is not embedded in practice. Appropriate only for projects where sustainability is not a goal.</span></div>
+        <div class="tier-row"><span class="tier-badge t-dev">Developing</span><span class="tier-pts">65–95 pts</span><span class="tier-desc">Commitments exist but practice is inconsistent. Suitable for low-sustainability-priority projects with active oversight.</span></div>
+        <div class="tier-row"><span class="tier-badge t-str">Strong</span><span class="tier-pts">96–121 pts</span><span class="tier-desc">Consistent practice across core areas. Appropriate for LEED, WELL, or performance-based projects.</span></div>
+        <div class="tier-row"><span class="tier-badge t-lead">Leading</span><span class="tier-pts">122–136 pts</span><span class="tier-desc">Above-average across technical, organizational, and cultural dimensions. Appropriate for net zero, high-performance, or complex portfolio work.</span></div>
+        <div class="tier-row"><span class="tier-badge t-exc">Exceptional</span><span class="tier-pts">137–162 pts</span><span class="tier-desc">Peer-level practice. Appropriate for <a href="https://living-future.org/lbc/" target="_blank" rel="noopener">Living Building Challenge</a>, zero carbon, or projects where sustainability is non-negotiable.</span></div>
+      </div>
+
+      <div class="ref-block full">
+        <h3>Knockout Flag Rules</h3>
+        <p style="font-size:12.5px;color:var(--ink);line-height:1.65;margin-bottom:10px;">There are 7 Knockout questions. Any Knockout scored 0 triggers a flag in the live scoreboard — regardless of total score. A flag means the evaluation should pause for an explicit conversation about that gap before engagement proceeds. A flagged firm can still be engaged on non-sustainability-critical work; the flag exists to prevent assumption-driven misalignment on projects where these commitments matter.</p>
+        <p style="font-size:12.5px;color:var(--mid);line-height:1.6;">A Knockout scored 1 (Partial) does not trigger a flag but should be noted. It typically means the firm is on a credible path but hasn't fully implemented — worth a follow-up conversation, not automatic disqualification.</p>
+      </div>
+
+      <div class="ref-block full">
+        <h3>Knockout Criteria: What 0 / 1 / 2 Means for Each</h3>
+        <div class="ko-item">
+          <div class="ko-label">KO 01 · Section 01</div>
+          <div class="ko-question">Are you a signatory of the <a href="https://www.mep2040.org" target="_blank" rel="noopener">MEP 2040 Commitment</a>? Do you have a published Company Plan and participate in quarterly Forum sessions?</div>
+          <div class="ko-criteria">
+            <div class="ko-crit"><div class="kc-num k2">2</div><div class="kc-text"><strong>Strong:</strong> Signatory with a publicly accessible Company Plan; can show it immediately; active quarterly forum participation; EPD language already in template specs as a result of the commitment.</div></div>
+            <div class="ko-crit"><div class="kc-num k1">1</div><div class="kc-text"><strong>Partial:</strong> Signatory; Company Plan exists but is internal or incomplete; limited forum engagement; recently signed without full implementation underway.</div></div>
+            <div class="ko-crit"><div class="kc-num k0">0</div><div class="kc-text"><strong>Weak:</strong> Not a signatory; or claims to be without ability to verify; or signed but has no Company Plan and no forum participation.</div></div>
+          </div>
+        </div>
+        <div class="ko-item">
+          <div class="ko-label">KO 02 · Section 02</div>
+          <div class="ko-question">Do you quantify and disclose your Scope 1, 2, and 3 greenhouse gas emissions?</div>
+          <div class="ko-criteria">
+            <div class="ko-crit"><div class="kc-num k2">2</div><div class="kc-text"><strong>Strong:</strong> All three scopes quantified and publicly disclosed using <a href="https://ghgprotocol.org" target="_blank" rel="noopener">GHG Protocol</a> or equivalent; Scope 3 includes multiple categories beyond business travel (purchased goods/services, employee commuting, upstream leased assets); annual reporting cycle with named framework.</div></div>
+            <div class="ko-crit"><div class="kc-num k1">1</div><div class="kc-text"><strong>Partial:</strong> Scopes 1 and 2 tracked with quantified data; Scope 3 estimated for some categories or tracked but not publicly disclosed; or Scope 3 limited to business travel only.</div></div>
+            <div class="ko-crit"><div class="kc-num k0">0</div><div class="kc-text"><strong>Weak:</strong> Only Scope 1 and/or 2 tracked; no Scope 3 accounting; or no quantified GHG accounting at all.</div></div>
+          </div>
+        </div>
+        <div class="ko-item">
+          <div class="ko-label">KO 03 · Section 03</div>
+          <div class="ko-question">What is your standard practice for refrigerant specification? Are you actively specifying low-GWP refrigerants?</div>
+          <div class="ko-criteria">
+            <div class="ko-crit"><div class="kc-num k2">2</div><div class="kc-text"><strong>Strong:</strong> Updated template specifications default to low-GWP refrigerants on all projects; can show spec language immediately; can name current specified refrigerants with GWP values and articulate the A2L transition rationale; not waiting for client request.</div></div>
+            <div class="ko-crit"><div class="kc-num k1">1</div><div class="kc-text"><strong>Partial:</strong> Specifies low-GWP refrigerants on certification projects or when clients request it; no firm-wide default; can describe the approach but cannot immediately show spec language.</div></div>
+            <div class="ko-crit"><div class="kc-num k0">0</div><div class="kc-text"><strong>Weak:</strong> Defaults to legacy equipment without proactive GWP consideration; unaware of <a href="https://www.epa.gov/climate-hfcs-reduction" target="_blank" rel="noopener">AIM Act</a> implications for their specifications; or describes refrigerant selection as "whatever the equipment comes with."</div></div>
+          </div>
+        </div>
+        <div class="ko-item">
+          <div class="ko-label">KO 04 · Section 03</div>
+          <div class="ko-question">Do your specifications request EPDs for MEP equipment? Can you show us example spec language?</div>
+          <div class="ko-criteria">
+            <div class="ko-crit"><div class="kc-num k2">2</div><div class="kc-text"><strong>Strong:</strong> EPD language in template MEP specifications applied to all projects, not just certification work; can share the actual language on the spot; covers multiple equipment categories (HVAC, electrical, plumbing as appropriate).</div></div>
+            <div class="ko-crit"><div class="kc-num k1">1</div><div class="kc-text"><strong>Partial:</strong> Has included EPD language in some project specifications; can describe what it says but cannot immediately produce template language; applied inconsistently across project types.</div></div>
+            <div class="ko-crit"><div class="kc-num k0">0</div><div class="kc-text"><strong>Weak:</strong> Does not request EPDs; describes intent to but has no spec language; or limits EPD requests only to specific LEED credits.</div></div>
+          </div>
+        </div>
+        <div class="ko-item">
+          <div class="ko-label">KO 05 · Section 04</div>
+          <div class="ko-question">What is your standard of practice for ventilation calculations — prescriptive <a href="https://www.ashrae.org/technical-resources/bookstore/standards-62-1-62-2" target="_blank" rel="noopener">ASHRAE 62.1</a> compliance, or performance-based optimization?</div>
+          <div class="ko-criteria">
+            <div class="ko-crit"><div class="kc-num k2">2</div><div class="kc-text"><strong>Strong:</strong> Performance-based optimization is the firm's standard on all project types; uses DCV with clearly defined occupancy input methodology; ventilation interacts with energy modeling; goes beyond <a href="https://www.ashrae.org/technical-resources/bookstore/standards-62-1-62-2" target="_blank" rel="noopener">ASHRAE 62.1</a> prescriptive minimums as a default, not an exception.</div></div>
+            <div class="ko-crit"><div class="kc-num k1">1</div><div class="kc-text"><strong>Partial:</strong> Uses performance-based approaches on certification and high-performance projects; defaults to prescriptive compliance on standard work; DCV is applied when specified by the client or required by a certification program.</div></div>
+            <div class="ko-crit"><div class="kc-num k0">0</div><div class="kc-text"><strong>Weak:</strong> Prescriptive <a href="https://www.ashrae.org/technical-resources/bookstore/standards-62-1-62-2" target="_blank" rel="noopener">ASHRAE 62.1</a> compliance is the stated standard; cannot meaningfully distinguish between prescriptive and performance-based approaches; code compliance is the goal.</div></div>
+          </div>
+        </div>
+        <div class="ko-item">
+          <div class="ko-label">KO 06 · Section 05</div>
+          <div class="ko-question">What is your standard practice for energy analysis on your projects?</div>
+          <div class="ko-criteria">
+            <div class="ko-crit"><div class="kc-num k2">2</div><div class="kc-text"><strong>Strong:</strong> For integrated design firms — whole-building modeling begins at schematic design on all projects. For MEP/building science consultants — actively tracks building performance data, reports consistently to <a href="https://www.aia.org/design-excellence/climate-action/zero-carbon/2030-commitment" target="_blank" rel="noopener">AIA 2030</a> <a href="https://2030ddx.aia.org" target="_blank" rel="noopener">DDx</a>, and can show post-occupancy performance data for completed projects.</div></div>
+            <div class="ko-crit"><div class="kc-num k1">1</div><div class="kc-text"><strong>Partial:</strong> For integrated firms — modeling is standard on certification projects but not all; begins at CDs on standard work. For MEP consultants — <a href="https://2030ddx.aia.org" target="_blank" rel="noopener">DDx</a> reporting is recent or partial; post-occupancy tracking inconsistent.</div></div>
+            <div class="ko-crit"><div class="kc-num k0">0</div><div class="kc-text"><strong>Weak:</strong> Energy modeling only when required by code or client request; for MEP consultants — no systematic tracking of building performance outcomes; cannot provide any post-occupancy energy data.</div></div>
+          </div>
+        </div>
+        <div class="ko-item">
+          <div class="ko-label">KO 07 · Section 07</div>
+          <div class="ko-question">What is your firm's default position on fossil fuel systems in new construction?</div>
+          <div class="ko-criteria">
+            <div class="ko-crit"><div class="kc-num k2">2</div><div class="kc-text"><strong>Strong:</strong> All-electric is the firm's documented default for new construction; can reference a policy or stated position; gas systems require written client request with documented rationale; firm proactively raises electrification in project discussions without waiting to be asked.</div></div>
+            <div class="ko-crit"><div class="kc-num k1">1</div><div class="kc-text"><strong>Partial:</strong> Firm recommends all-electric and does so when given the opportunity; no formal documented policy; gas systems evaluated on client request without requiring formal documentation; doesn't consistently initiate the conversation.</div></div>
+            <div class="ko-crit"><div class="kc-num k0">0</div><div class="kc-text"><strong>Weak:</strong> No stated position; evaluates gas vs. electric based solely on client preference or first cost; describes the choice as "the client decides"; or has not considered a firm position on this.</div></div>
+          </div>
+        </div>
+      </div><!-- end KO criteria -->
+
+      <div class="ref-block full">
+        <h3>A Note on Section 06 — Credentials</h3>
+        <p style="font-size:12.5px;color:var(--ink);line-height:1.65;">Credential accumulation correlates with firm age and size. A five-person firm with five years of practice cannot be held to the same credential depth as a 100-person firm with 30 years of green building work. When evaluating Section 06, treat Context-level credential questions as relative benchmarks — ask whether the firm is investing in credentials that match their project scope, not whether they match an absolute count. The distribution of credentials across a team matters more than total numbers: one <a href="https://www.usgbc.org/credentials/leed-fellow" target="_blank" rel="noopener">LEED Fellow</a> carrying all sustainability weight for a 50-person firm is a red flag, not a green one.</p>
+      </div>
+
+    </div>
+  </section>
+
+</div><!-- end body-wrap -->
+
+<footer class="page-footer">
+  <div class="page-footer-left">
+    Created by <a href="https://www.linkedin.com/in/sarahgudeman" target="_blank">Sarah Gudeman, PE, LEED Fellow</a> &nbsp;·&nbsp; <a href="https://www.branchpattern.com" target="_blank">branchpattern.com</a>
+  </div>
+  <div class="page-footer-right">© 2026 BranchPattern. All rights reserved.</div>
+</footer>
+
+<!-- SCOREBOARD -->
+<div class="scoreboard no-print" id="scoreboard">
+  <span class="sb-label">Vetting Score</span>
+  <div class="sb-divider"></div>
+  <div class="sb-stat"><span class="sb-stat-num" id="sb-score">0</span><span class="sb-stat-sub">/ 162 pts</span></div>
+  <div class="sb-stat"><span class="sb-stat-num" id="sb-pct">0%</span><span class="sb-stat-sub">of max</span></div>
+  <div class="sb-divider"></div>
+  <span class="sb-tier tier-notstarted" id="sb-tier">Not Started</span>
+  <span class="sb-flags" id="sb-flags" style="display:none">⚑ <span id="sb-flag-count">0</span> KO Flag</span>
+  <span class="sb-answered" id="sb-answered">0 / 44 answered</span>
+  <button class="sb-reset" onclick="resetAll()">Reset</button>
+</div>
+
+<script>
+const weights = {
+  q01:3,q02:2,q03:2,q04:1,q05:1,
+  q06:3,q07:2,q08:2,q09:2,q10:1,q11:1,
+  q12:3,q13:3,q14:2,q15:2,q16:2,
+  q17:3,q18:2,q19:2,q20:2,q21:1,
+  q22:3,q23:2,q24:2,q25:2,
+  q26:2,q27:2,q28:1,q29:2,q30:1,q31:1,
+  q32:3,q33:2,q34:2,
+  q35:2,q36:2,q37:1,q38:1,q39:1,
+  q40:2,q41:2,q42:1,q43:1,q44:1,
+  q45:1
+};
+const koIds = ['q01','q06','q12','q13','q17','q22','q32'];
+const MAX = 163;
+const scores = {};
+Object.keys(weights).forEach(k => scores[k] = null);
+
+function score(qid, val) {
+  scores[qid] = val;
+  document.querySelectorAll(`[data-qid="${qid}"] .sbtn`).forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.val) === val);
+  });
+  const btnsEl = document.querySelector(`[data-qid="${qid}"]`);
+  if (btnsEl) {
+    const qi = btnsEl.closest('.q-item');
+    if (qi) {
+      qi.classList.remove('scored-weak','scored-partial','scored-strong');
+      qi.classList.add(val===0?'scored-weak':val===1?'scored-partial':'scored-strong');
+    }
+  }
+  updateBoard();
+}
+
+function updateBoard() {
+  let total=0, answered=0;
+  const flags=[];
+  Object.entries(scores).forEach(([qid,val]) => {
+    if (val!==null) { answered++; total+=val*weights[qid]; if(koIds.includes(qid)&&val===0) flags.push(qid); }
+  });
+  const pct = Math.round(total/MAX*100);
+  let tier='', cls='';
+  if (answered===0)      { tier='Not Started'; cls='tier-notstarted'; }
+  else if (total<65)     { tier='Not Aligned'; cls='tier-low'; }
+  else if (total<96)     { tier='Developing';  cls='tier-dev'; }
+  else if (total<122)    { tier='Strong';       cls='tier-str'; }
+  else if (total<137)    { tier='Leading';      cls='tier-lead'; }
+  else                   { tier='Exceptional';  cls='tier-exc'; }
+  document.getElementById('sb-score').textContent = total;
+  document.getElementById('sb-pct').textContent = pct+'%';
+  document.getElementById('sb-answered').textContent = answered+' / 45 answered';
+  const te = document.getElementById('sb-tier');
+  te.textContent = tier; te.className = 'sb-tier '+cls;
+  const fe = document.getElementById('sb-flags');
+  if (flags.length>0) {
+    fe.innerHTML = '⚑ '+flags.length+' KO Flag'+(flags.length>1?'s':'');
+    fe.style.display='flex';
+  } else { fe.style.display='none'; }
+}
+
+function resetAll() {
+  if (!confirm('Reset all scores?')) return;
+  Object.keys(scores).forEach(k=>scores[k]=null);
+  document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.q-item').forEach(el=>el.classList.remove('scored-weak','scored-partial','scored-strong'));
+  updateBoard();
+}
+</script>
+</body>
+</html>
